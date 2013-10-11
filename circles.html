@@ -1,141 +1,58 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Circles</title>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
     <style type="text/css">
         html, body {
           height: 100%;
           margin: 0;
           padding: 0;
+      }
+
+      #map-canvas, #map_canvas {
+          height: 100%;
+      }
+
+      @media print {
+          html, body {
+            height: auto;
         }
 
         #map-canvas, #map_canvas {
-          height: 100%;
-        }
-
-        @media print {
-          html, body {
-            height: auto;
-          }
-
-          #map-canvas, #map_canvas {
             height: 650px;
-          }
         }
-
-        #panel {
-          position: absolute;
-          top: 5px;
-          left: 50%;
-          margin-left: -180px;
-          z-index: 5;
-          background-color: #fff;
-          padding: 5px;
-        }
-    </style>
-    <script>
-// This example creates circles on the map
-
-/**
- * TODOs
-    * - Center map on current location
-    * - Set (multiple) markers on map
-    * - Draw 'x' mile radius circles around markers
-        - if circles don't intersect, increase until they do?
-    * - Search where circles intersect
- */
-
-
-// Peoplemap for separate person-as-circle representation
-var peopleMap = {};
-peopleMap['ralph'] = {
-  center: new google.maps.LatLng(51.544205, -0.05421499),
-  size: 2000,
-  strokeColor: 'rgba(250,50,50,0.5)',
-  fillColor: 'rgba(200,30,30,0.8)',
-};
-peopleMap['siobhan'] = {
-  center: new google.maps.LatLng(51.534205, -0.07421499),
-  size: 2000,
-  strokeColor: 'rgba(50,250,50,0.5)',
-  fillColor: 'rgba(30,200,30,0.8)',
-
-};
-peopleMap['dan'] = {
-  center: new google.maps.LatLng(51.51805, -0.06121499),
-  size: 2000,
-  strokeColor: 'rgba(50,50,250,0.5)',
-  fillColor: 'rgba(30,50,200,0.8)',
-
-};
-var cityCircle;
-
-function attachOnclicks(map){
-    google.maps.event.addListener(map, 'click', function(e) {
-        console.log('click',e);
-    });
-
-}
-
-function initialize() {
-  // Create the map.
-  var mapOptions = {
-    zoom: 13,
-    // 51.5072° N, 0.1275
-    // center: new google.maps.LatLng(37.09024, -95.712891),
-    center: new google.maps.LatLng(51.544205, -0.05421499),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
-
-    // Try HTML5 geolocation
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var pos = new google.maps.LatLng(position.coords.latitude,
-                                           position.coords.longitude);
-
-          var infowindow = new google.maps.InfoWindow({
-            map: map,
-            position: pos,
-            content: 'Location found using HTML5.'
-          });
-
-          map.setCenter(pos);
-        });
     }
 
-    // Attach onclick events
-    attachOnclicks(map);
-
-  // Construct the circle for each value in citymap.
-  // Note: We scale the population by a factor of 20.
-  for (var person in peopleMap) {
-    var populationOptions = {
-      strokeColor: peopleMap[person].strokeColor,
-      fillColor: peopleMap[person].fillColor,
-      // strokeOpacity: 0.8,
-      strokeWeight: 1,
-      fillOpacity: 0.35,
-      map: map,
-      center: peopleMap[person].center,
-      radius: peopleMap[person].size
-    };
-    // Add the circle for this city to the map.
-    cityCircle = new google.maps.Circle(populationOptions);
+    #panel {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
   }
-}
+  #target {
+      width: 345px;
+  }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+</style>
 
-    </script>
-  </head>
-  <body>
+</head>
+<body>
+    <div id="panel">
+        <label for='target'>
+            Where are you?
+            <input id="target" type="text" placeholder="Search Box">
+        </label>
+    </div>
     <div id="map-canvas"></div>
-  </body>
+</body>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="circs.js"></script>
 </html>
